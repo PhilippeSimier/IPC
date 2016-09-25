@@ -15,7 +15,7 @@
 void affichage(int sig)
 {   static int cpt = 0;
     cpt++;
-    printf("%d :Signal %d\n", cpt, sig);
+    printf("%d : Signal %d recu par %d\n", cpt, sig, getpid());
     if (cpt == 2){
         printf("deux signaux SIGUSR1 reçu par pid :%d\n", getpid());
     }
@@ -27,6 +27,7 @@ int main ( int argc, char *argv[] )
 	int statut,retour;
 
 	pid1 = getpid();
+	(void) signal(SIGUSR1, affichage); // redirection des signaux SIGUSR1 vers la fonction affichage
 	printf ("Père   p1 pid = %d\n", pid1);
 	pid2 = fork();
 	if ( pid2 == 0 )
@@ -57,7 +58,13 @@ int main ( int argc, char *argv[] )
 	}
 	else
 	{	// Père P1
-		(void) signal(SIGUSR1, affichage); // redirection des signaux SIGUSR1 vers la fonction affichage
+		sleep(1);
+		retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 2
+		sleep(1);
+		retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 2
+                sleep(1);
+                retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 3
+
 		wait(&statut);
 		printf ("Fin de père\n");
 	}

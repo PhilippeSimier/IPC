@@ -9,7 +9,7 @@
 int main ( int argc, char *argv[] )
 {
 	int pid1,pid2,pid3,pid4;
-	pid4 = getpid(); 
+	pid4 = getpid();
 	pid1 = fork();
 	if ( pid1 == 0 )
 	{       // Enfant P1
