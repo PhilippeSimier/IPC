@@ -64,7 +64,7 @@ int main ( int argc, char *argv[] )
 		sleep(1);
 		retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 2
                 sleep(1);
-                retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 3
+                retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 2
 
 		wait(&statut);
 		printf ("Fin de père\n");
