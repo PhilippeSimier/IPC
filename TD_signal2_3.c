@@ -41,14 +41,15 @@ int main ( int argc, char *argv[] )
 			if (retour !=0) {
 				printf("Erreur avec kill");
 			}
-			sleep(1);
+			sleep(5);
 			printf ("Fin de Enfant 3\n");
                 }
 		else{
 			// Enfant P2
 			printf ( "Enfant p2 pid = %d ppid = %d\n", getpid(), getppid());
 			retour = kill(pid1, SIGUSR1); // envoi d'un signal USR1 au père P1
-                        if (retour !=0) {
+                        retour = kill(pid3, SIGUSR1); // envoi d'un signal USR1 a enfant P3
+			if (retour !=0) {
                                 printf("Erreur avec kill");
                         }
 			wait(&statut);
