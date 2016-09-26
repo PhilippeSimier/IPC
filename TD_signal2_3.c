@@ -1,5 +1,6 @@
 /****************************************************************
-*   IPC Snir2  Signaux  Exo n°2 question 3                      *
+*   IPC Snir2  TD sur les signaux				*
+*   Etude des signaux  Exo n°2 question 3 4 5                   *
 *   Compilation : gcc TD_signal2_3.c -o TD_signal2_3 -Wall      *
 *****************************************************************/
 
@@ -23,8 +24,11 @@ void affichage(int sig)
 
 int main ( int argc, char *argv[] )
 {
-	int pid1,pid2,pid3;
-	int statut,retour;
+	int pid1;
+	int pid2 = 0;
+	int pid3 = 0;
+	int statut = 0;
+	int retour = 0;
 
 	pid1 = getpid();
 	(void) signal(SIGUSR1, affichage); // redirection des signaux SIGUSR1 vers la fonction affichage
@@ -37,7 +41,8 @@ int main ( int argc, char *argv[] )
 			// Enfant P3
 			printf ( "Enfant p3 pid = %d ppid = %d\n", getpid(), getppid());
 			sleep(1);
-			retour = kill(pid1, SIGUSR1); // envoi d'un signal USR1 au père P1
+			// envoi d'un signal USR1 au père P1 (pid1)
+			retour = kill(pid1, SIGUSR1);
 			if (retour !=0) {
 				printf("Erreur avec kill");
 			}
@@ -62,10 +67,12 @@ int main ( int argc, char *argv[] )
 		sleep(1);
 		retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 2
 		sleep(1);
-		retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 2
-                sleep(1);
-                retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 2
-
+		// essai d'envoi d'un signal au petit fils !!!
+		if (pid3 != 0){
+		    retour = kill(pid3, SIGUSR1); // envoi d'un signal USR1 a enfant 3
+		} else {
+		    printf("le processus père : pid3 = %d \n",pid3);
+		}
 		wait(&statut);
 		printf ("Fin de père\n");
 	}
