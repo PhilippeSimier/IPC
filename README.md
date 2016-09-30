@@ -1,4 +1,7 @@
-# IPC
+# Programmation système et réseau (Linux)
 
-Processus, signal, fork, 
-attendre la fin d'un processus fils
+Fonctionnement du système d'exploitation
+Processus, ordonnancement, système de fichier ... (fork, wait) 
+
+Outils de communication et de synchronisation
+Sockets, signaux, tubes, mémoires partagées, sémaphores 
