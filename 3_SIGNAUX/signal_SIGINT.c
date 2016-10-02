@@ -5,6 +5,9 @@
 *  sur lequel il travaille (il écrit 10 fois la chaîne "abcdef...xyz"
 *  dans le fichier. En cas de réception du signal SIGINT le processus
 *  ferme le fichier avant de se terminer.
+*
+*  compilation : gcc signal_SIGINT.c -o signal_SIGINT -Wall
+*
 *********************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,7 +36,12 @@ int main ( int argc, char *argv[] )
 	printf("probleme avec l'ouverture du fichier test !\n");
 	return 1;
     }
-    (void) signal(SIGINT, onIntr);  // redirection des signaux SIGINT vers onInt
+    // redirection des signaux SIGINT vers onInt
+    if ( signal(SIGINT, onIntr) == SIG_ERR)
+    {
+	printf("Probleme avec la redirection signal !\n");
+	return 1;
+    }
     while (i < 10){
 	printf(" %d\n",i);
         write (desc, "abcdefghijklmnopqrstuvwxyz\n", 27);
