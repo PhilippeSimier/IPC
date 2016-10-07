@@ -2,6 +2,9 @@
 *
 *     Corrigé du td n°5  élève question 3 et 4
 *
+*     Un mutex est un objet d'exclusion mutuelle (MUTual EXclusion), et est très pratique
+*     pour protéger des données partagées
+*
 *     Q3 Modifiez le comportement des threads afin que chacun mette à jour les 3 champs
 *     de la structure.
 *
@@ -27,7 +30,7 @@ typedef struct {
     int v3;
 }laStruct;
 
-laStruct        global;
+laStruct        global;    /** variable globale partagée **/
 pthread_mutex_t verrou = PTHREAD_MUTEX_INITIALIZER; /** Création du mutex et initialisation**/
 
 void *tache1(void *p_data)
@@ -35,6 +38,12 @@ void *tache1(void *p_data)
 
     laStruct val = *((laStruct *) p_data);
     int tid;
+    int j = 1;
+
+    for (int i=0 ; i< 20000; i++){     /** boucle pour retarder la tache1 **/
+        j *= 2;
+    }
+
 
     pthread_mutex_lock(&verrou); /** On verrouille le mutex **/
     global = val;
@@ -106,12 +115,6 @@ int main()
     laStruct a = {11,12,13};
     laStruct b = {21,22,23};
     laStruct c = {31,32,33};
-
-    if (pthread_mutex_init(&verrou, NULL) != 0)
-    {
-        printf("Mutex init failed\n");
-        return 1;
-    }
 
     /** Création des trois threads  **/
 
