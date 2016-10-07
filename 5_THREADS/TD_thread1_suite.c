@@ -2,10 +2,14 @@
 *
 *     Corrigé du td n°5  élève question 3 et 4
 *
+*     A titre d’exemple une Ressource Critique peut être une variable globale (variable commune
+*     à plusieurs threads : la mise à jour de cette variable doit se faire en exclusion 
+*     mutuelle pour garantir  la cohérence des données).
 *     Un mutex est un objet d'exclusion mutuelle (MUTual EXclusion), et est très pratique
-*     pour protéger des données partagées
+*     pour protéger des données partagées.  La partie du processus  qui s’exécute en exclusion
+*     mutuelle est appelée « section critique ».
 *
-*     Q3 Modifiez le comportement des threads afin que chacun met à jour les 3 champs
+*     Q3 Modifiez le comportement des threads afin que chacun mettent à jour les 3 champs
 *     de la structure.
 *
 *     Q4 Modifiez votre programme pour que la validité des données soit assurée (mutex)
