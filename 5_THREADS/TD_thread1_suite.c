@@ -2,14 +2,10 @@
 *
 *     Corrigé du td n°5  élève question 3 et 4
 *
-<<<<<<< HEAD
 *     Un mutex est un objet d'exclusion mutuelle (MUTual EXclusion), et est très pratique
 *     pour protéger des données partagées
 *
-*     Q3 Modifiez le comportement des threads afin que chacun mette à jour les 3 champs
-=======
 *     Q3 Modifiez le comportement des threads afin que chacun met à jour les 3 champs
->>>>>>> 2667b096a81d63d8257b5be9eb1742cc3e2fedc9
 *     de la structure.
 *
 *     Q4 Modifiez votre programme pour que la validité des données soit assurée (mutex)
