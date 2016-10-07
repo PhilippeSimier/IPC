@@ -2,7 +2,7 @@
 *
 *     Corrigé du td n°5  élève question 3 et 4
 *
-*     Q3 Modifiez le comportement des threads afin que chacun mette à jour les 3 champs
+*     Q3 Modifiez le comportement des threads afin que chacun met à jour les 3 champs
 *     de la structure.
 *
 *     Q4 Modifiez votre programme pour que la validité des données soit assurée (mutex)
