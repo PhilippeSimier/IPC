@@ -24,7 +24,7 @@ int main()
     key_t key;
 
 // Création de la clé
-    if ((key = ftok("/tmp/bidon",'a')) == -1){
+    if ((key = ftok("/tmp/bidon" , 1234 )) == -1){
         perror("ftok");
         exit(2);
     }
