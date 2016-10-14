@@ -1,8 +1,11 @@
 /*************************************************************
- *	p1.c
- *	met des messages de type 2(temp) et 4(press)
- *	dans la file de message ayant pour clef 5678
- * ***********************************************************/
+*	p1.c
+*	met des messages de type 2(temp) et 4(press)
+*	dans la file de message
+*
+*  Compilation : gcc p1.c -o p1 -Wall
+*
+*************************************************************/
 
 
 #include "zone.h"
@@ -19,11 +22,16 @@ int main(int argc,char *argv[]){
 	struct donnees maFile;
 	int idFile;
 	unsigned int val=0;
-
 	float valF;
 
-	/* obtention de la file pour la clé 5678 */
-	idFile = msgget((key_t)5678,0666|IPC_CREAT);
+        // Obtention de la clé
+	key_t key;
+	if ((key = ftok("/tmp/bidon" , 5678 )) == -1){
+		perror("ftok");
+		exit(2);
+	}
+	/* obtention de la file pour la clé key */
+	idFile = msgget( key , 0666|IPC_CREAT );
 	if (idFile==-1){
 		printf("pb creation file : %s\n",strerror(errno));
 		exit(1);
