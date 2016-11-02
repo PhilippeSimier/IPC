@@ -1,11 +1,13 @@
 /*********************************************************************
    Correction du TP de programmation système UNIX
    TP Mini-shell
+
    Question 2
    Les parties modifiées par rapport à la question 1 sont identifiées
    par le symbole XXX.
+
    -   mardi 1 Novembre 2016
-   -   Compilation : gcc minishell2.c -o minishell2 -Wall
+   -   Compilation : gcc minishell4.c -o minishell4 -Wall
 **********************************************************************/
 
 // en-têtes standard
@@ -40,8 +42,21 @@ void lit_ligne()
     exit(0);
   }
 }
+//XXX primitive pour afficher une variable d'environnement
+void affiche()
+{
+   if (elems[1])
+	printf("%s : %s\n", elems[1], getenv(elems[1]));
+}
+//XXX  primitive pour modifier une variable d'environnement
+void fixe()
+{
+    if (elems[1] && elems[2]){
+	setenv(elems[1], elems[2], 1);
+    }
+}
 
-/* XXX
+/*
    découpe ligne en mots
    fait pointer chaque elems[i] sur un mot différent
    elems se termine par NULL
@@ -100,6 +115,20 @@ void execute()
   pid_t pid;
 
   if (!elems[0]) return; /* ligne vide */
+  if (strcmp(elems[0],"affiche")==0){  // XXX primitive affiche
+        affiche(elems[1]);
+  	return;
+  }
+  if (strcmp(elems[0],"fixe")==0){  // XXX primitive fixe
+        fixe();
+        return;
+
+  }
+  if (strcmp(elems[0],"exit")==0){
+        printf("bye bye\n");           // XXX primitive exit
+        exit(0);
+
+  }
 
   pid = fork();
   if (pid < 0) {
