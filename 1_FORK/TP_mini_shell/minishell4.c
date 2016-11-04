@@ -111,6 +111,9 @@ void execute()
   if (strcmp(elems[0],"cd")==0){ 
     if (elems[1])
 	chdir (elems[1]);                         // XXX primitive cd Change Directory
+    else{
+    	chdir (getenv ("HOME"));                 // si cd seul on retourne dans home
+    }
     return;
   }
 
