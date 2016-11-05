@@ -6,6 +6,11 @@
 
 	Compilation : gcc minishell1.c -o minishell1 -Wall
 **************************************************************/
+// les couleurs
+#define ROUGE  "\033[1;31m"
+#define JAUNE  "\033[1;33m"
+#define VERT   "\033[1;32m"
+#define RESET  "\033[1;0m"
 
 // en-têtes standard
 #include <sys/types.h>
@@ -49,10 +54,18 @@ void attent(pid_t pid)
       printf("erreur de waitpid (%s)\n",strerror(errno));
       break;
     }
-    if (WIFEXITED(status))  			       /* renvoie vrai si le fils s'est terminé normalement */
-      printf("terminaison normale, status %i\n",WEXITSTATUS(status)); /* renvoie le code de sortie du fils. */
-    if (WIFSIGNALED(status))                  /* renvoie vrai si le fils s'est terminé à cause d'un signal. */
-      printf("terminaison par signal %i\n",WTERMSIG(status));/* renvoie le numéro du signal qui a causé la fin du fils.*/
+    if (WIFEXITED(status)){  			       /* renvoie vrai si le fils s'est terminé normalement */
+	if (WEXITSTATUS(status) == 0)
+      	    printf(VERT);
+	else
+	    printf(JAUNE);
+      printf("Terminaison normale, status %i\n",WEXITSTATUS(status)); /* renvoie le code de sortie du fils. */
+    }
+    if (WIFSIGNALED(status)){                 /* renvoie vrai si le fils s'est terminé à cause d'un signal. */
+      printf(ROUGE);
+      printf("\nTerminaison par signal %i\n",WTERMSIG(status));/* renvoie le numéro du signal qui a causé la fin du fils.*/
+    }
+    printf(RESET);
     break;
   }
 }
