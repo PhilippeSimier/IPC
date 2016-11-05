@@ -22,7 +22,7 @@
 #include <ctype.h>      // pour avoir isspace & co.
 #include <string.h>
 #include <errno.h>      // pour avoir errno
-
+#include "signaux.h"    // la liste des signaux en clair
 char ligne[4096];       //Variable globale contient la ligne d'entrée
 
 
@@ -59,11 +59,13 @@ void attent(pid_t pid)
       	    printf(VERT);
 	else
 	    printf(JAUNE);
-      printf("Terminaison normale, status %i\n",WEXITSTATUS(status)); /* renvoie le code de sortie du fils. */
+      printf("Terminaison normale, status %d\n",WEXITSTATUS(status)); /* renvoie le code de sortie du fils. */
     }
     if (WIFSIGNALED(status)){                 /* renvoie vrai si le fils s'est terminé à cause d'un signal. */
       printf(ROUGE);
-      printf("\nTerminaison par signal %i\n",WTERMSIG(status));/* renvoie le numéro du signal qui a causé la fin du fils.*/
+      printf("\nTerminaison par signal %d %s\n",
+		WTERMSIG(status),
+                listeSignaux[WTERMSIG(status)]);/* renvoie le numéro du signal qui a causé la fin du fils.*/
     }
     printf(RESET);
     break;
