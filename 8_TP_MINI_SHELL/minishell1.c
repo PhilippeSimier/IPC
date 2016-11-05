@@ -39,19 +39,20 @@ void lit_ligne()
 /* attent la fin du processus pid */
 void attent(pid_t pid)
 {
-  /* il faut boucler car waitpid peut retourner avec une erreur non fatale */
+  /* il faut boucler car waitpid peut retourner avec une erreur non fatale
+     quand le processus fils a été interrompu. errno = EINTR (erreur N°4) */
   while (1) {
     int status;
-    int r = waitpid(pid,&status,0); /* attente bloquante */
+    int r = waitpid(pid,&status,0); /* attente bloquante pour le père*/
     if (r<0) {
-      if (errno==EINTR) continue; /* interrompu => on recommence à attendre */
+      if (errno==EINTR) continue; /* le fils a été interrompu => on recommence à attendre */
       printf("erreur de waitpid (%s)\n",strerror(errno));
       break;
     }
-    if (WIFEXITED(status))
-      printf("terminaison normale, status %i\n",WEXITSTATUS(status));
-    if (WIFSIGNALED(status))
-      printf("terminaison par signal %i\n",WTERMSIG(status));
+    if (WIFEXITED(status))  			       /* renvoie vrai si le fils s'est terminé normalement */
+      printf("terminaison normale, status %i\n",WEXITSTATUS(status)); /* renvoie le code de sortie du fils. */
+    if (WIFSIGNALED(status))                  /* renvoie vrai si le fils s'est terminé à cause d'un signal. */
+      printf("terminaison par signal %i\n",WTERMSIG(status));/* renvoie le numéro du signal qui a causé la fin du fils.*/
     break;
   }
 }
