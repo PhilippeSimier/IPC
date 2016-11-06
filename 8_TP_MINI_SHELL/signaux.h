@@ -3,7 +3,7 @@
 
 char *listeSignaux[33]={"",
 			"Instruction (HANG UP) - Fin de session",
-                        "Interruption (Frappe de CTRL C",
+                        "Interruption (CTRL C)",
                         "Instruction (QUIT)",
                         "Instruction illégale",
                         "Point d'arrêt",
