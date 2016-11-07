@@ -39,7 +39,7 @@ char* elems[MAXELEMS];
 
 void affiche_invite()
 {
-  printf("SNIR shell4 > ");
+  printf("SNIR shell5 > ");
   fflush(stdout);
 }
 
