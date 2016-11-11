@@ -2,13 +2,13 @@
    Correction du TP de programmation système UNIX
    TP Mini-shell
 
-   Question 5 Redirection de la sortie standard
+   Question 6 Toutes les commandes sont éxécutée en tâche de fond
 
-   Les parties modifiées par rapport à la question 4 sont identifiées
+   Les parties modifiées par rapport à la question 5 sont identifiées
    par le symbole XXX.
 
-   -   Dimanche 6 Novembre 2016
-   -   Compilation : gcc minishell5.c -o minishell5 -Wall
+   -   Jeudi 10  Novembre 2016
+   -   Compilation : gcc minishell6.c -o minishell6 -Wall
  ************************************************************************/
 // les couleurs
 #define ROUGE  "\033[1;31m"
@@ -41,20 +41,22 @@ char* elems[MAXELEMS];
 void affiche_invite()
 {
     printf(BLEU);
-    printf("SNIR shell5 > ");
+    printf("SNIR shell6 > ");
     printf(RESET);
     fflush(stdout);
 }
 
+// dans le père fgets peut être interrompu par SIGHLD
+// donc on boucle
 void lit_ligne()
 {
-  if (!fgets(ligne,sizeof(ligne)-1,stdin)) {
-    printf("\n");
-    exit(0);
-  }
+    do{
+  	if (fgets(ligne, sizeof(ligne)-1, stdin)) break;
+    }
+    while (!feof(stdin));
 }
 
-/* découpe ligne en mots
+/* découpe la ligne en mots
    fait pointer chaque elems[i] sur un mot différent
    elems se termine par NULL
  */
@@ -82,42 +84,42 @@ void decoupe()
   elems[i] = NULL;
 }
 
-/* attent la fin du processus pid */
-void attent(pid_t pid)
+/* fonction qui sera éxecutée pour les signaux HLD reçus */
+void handlerHLD(int signal)
 {
   /* il faut boucler car waitpid peut retourner avec une erreur non fatale
      quand le processus fils a été interrompu. errno = EINTR (erreur N°4) */
-  while (1) {
-    int status;
-    int r = waitpid(pid,&status,0); /* attente bloquante pour le père*/
-    if (r<0) {
-      if (errno==EINTR) continue; /* le fils a été interrompu => on recommence à attendre */
-      printf("erreur de waitpid (%s)\n",strerror(errno));
-      break;
-    }
-    if (WIFEXITED(status)){                            /* renvoie vrai si le fils s'est terminé normalement */
-        if (WEXITSTATUS(status) == 0)
-            printf(VERT);
-        else
-            printf(JAUNE);
-    printf("Pid = %d Terminaison normale, status %i\n", pid, WEXITSTATUS(status)); /* renvoie le code de sortie du fils. */
-    }
-    if (WIFSIGNALED(status)){                 /* renvoie vrai si le fils s'est terminé à cause d'un signal. */
-      printf(ROUGE);
-      printf("Pid = %d Terminaison par signal %d %s\n",
+    while (1) {
+   	int status;
+    	pid_t pid = waitpid(-1,&status,WNOHANG); /*-1 attend la fin de n'importe quel processus fils */
+    	if (pid<0) {
+      	   if (errno==EINTR) continue; /* le fils a été interrompu => on recommence à attendre */
+           if (errno==ECHILD) break;   /* plus de fils terminé => on quitte */
+           printf("erreur de waitpid (%s)\n",strerror(errno));
+           break;
+        }
+        if (pid == 0) break; /*plus de fils on quitte*/
+        if (WIFEXITED(status)){  // renvoie vrai si le fils s'est terminé normalement
+            if (WEXITSTATUS(status) == 0)
+                printf(VERT); // Ecrit en vert si statut = 0 en jaune sinon
+            else
+                printf(JAUNE);
+            printf("Pid = %d Terminaison normale, status %i\n", pid, WEXITSTATUS(status)); /* renvoie le code de sortie du fils. */
+        }
+        if (WIFSIGNALED(status)){  /* renvoie vrai si le fils s'est terminé à cause d'un signal. */
+      	    printf(ROUGE);
+            printf("Pid = %d Terminaison par signal %d %s\n",
                 pid,
                 WTERMSIG(status),
                 listeSignaux[WTERMSIG(status)]);/* renvoie le numéro du signal qui a causé la fin du fils.*/
+        }
+        printf(RESET);
     }
-    printf(RESET);
-    break;
-  }
 }
 
 void execute()
 {
   pid_t pid;
-  struct sigaction sig;
 
   if (!elems[0]) return; /* ligne vide */
 
@@ -136,10 +138,6 @@ void execute()
     return;
   }
 
-  /* désactive l'interruption par Contrôle+C.   */
-  sig.sa_flags = 0;
-  sig.sa_handler = SIG_IGN;
-  sigaction(SIGINT, &sig, NULL);
 
   pid = fork();
   if (pid < 0) {
@@ -148,13 +146,17 @@ void execute()
   }
 
   if (pid==0) {
-    /* fils */
+    /* on est dans le fils */
     int i;
-    /* Réactive l'interruption par Contrôle+C */
-    sig.sa_handler = SIG_DFL;
-    sigaction(SIGINT, &sig, NULL);
 
-    /* XXX redirection cherche le dernier argument de la ligne */
+    /* XXX redirection de l'entrée standard sur /dev/null */
+    int devnull = open("/dev/null",O_RDONLY);
+    if (devnull != -1) {
+         close(0);
+         dup2(devnull,0);
+    }
+
+    /* XXX redirection de la sortie cherche le dernier argument de la ligne */
     for (i=0;elems[i+1];i++);
 
     if (elems[i][0]=='>') {
@@ -166,11 +168,11 @@ void execute()
 	    exit(1);
         }
 
-        /* XXX redirection redirige la sortie standard sur file */
+        /* redirection de la sortie standard sur file */
         close(1);     // ferme la sortie standard
         dup2(file,1); //duplique file avec 1 donc file devient la sortie standard
 
-        /* XXX Q5 supprime le dernier argument */
+        /*  supprime le dernier argument */
         elems[i] = NULL;
     }
 
@@ -181,18 +183,25 @@ void execute()
     exit(1);
   }// fin de fils
   else {
-    /* père */
+    //père
     printf("Pid = %d %s\n", pid, elems[0]);
-    attent(pid);
-
-    /* XXX réactive l'interruption par Contrôle+C */
-    sig.sa_handler = SIG_DFL;
-    sigaction(SIGINT, &sig, NULL);
+    sleep(1); // une petite tempo avant de redonner la main
   }
 }
 
 int main()
 {
+  /* XXX installation du handler pour le signal SIGCHLD */
+  struct sigaction sig;
+  sig.sa_flags = 0;
+  sig.sa_handler = handlerHLD;
+  sigemptyset(&sig.sa_mask);
+  sigaction(SIGCHLD, &sig, NULL);
+
+  /* XXX désactivation l'interruption par Controle+C */
+  sig.sa_handler = SIG_IGN;
+  sigaction(SIGINT, &sig, NULL);
+
   while (1) {
     affiche_invite();
     lit_ligne();
