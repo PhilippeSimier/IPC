@@ -5,7 +5,9 @@
 *****************************************************/
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <unistd.h> // pour avoir alarm
+#include <sys/types.h>
+#include <signal.h> // pour avoir kill
 
 int main()
 {
@@ -34,11 +36,13 @@ int main()
 	case 2:
 	   abort();   // pour provoquer une terminaison par abandon
 	case 3:
-           b = 100/0;  // division pa zéro
+           b = 100/(b - 3);  // division par zéro car ici b = 3
         case 4:
            for(k=0; ; k++){
-		buffer[k] = 'A';
-           }          //provoquer une violation de la segmentation mémoire
+		buffer[k] = k;  //provoquer une violation de la segmentation mémoire
+		b = buffer[k];   
+           	
+	   }          
 	case 5:
 	    alarm(1); // lancement d'un timer pour 1s
 	    pause();  // attente on fait rien
@@ -47,7 +51,7 @@ int main()
 	    kill(getpid(),10); //  Permet de s'envoyer un signal USR1
         case 7:
             kill(getpid(),12); //  Permet de s'envoyer un signal USR2
-
+	return 0
 
     }
 }

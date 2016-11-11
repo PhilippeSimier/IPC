@@ -40,10 +40,15 @@ char* elems[MAXELEMS];
 
 void affiche_invite()
 {
+<<<<<<< HEAD
     printf(BLEU);
     printf("SNIR shell5 > ");
     printf(RESET);
     fflush(stdout);
+=======
+  printf("SNIR shell5 > ");
+  fflush(stdout);
+>>>>>>> 8c3ecd6a579ee325953ba8fa602c4a7e59de74f6
 }
 
 void lit_ligne()
