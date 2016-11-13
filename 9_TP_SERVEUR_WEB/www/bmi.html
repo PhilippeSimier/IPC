@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+Corrigé évaluation HTML5 BMI calculator
+-->
+<html>
+    <head>
+        <title>BMI Calculator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link  href="bmiCss.css" rel="stylesheet" type="text/css"/>
+        <link  href="bmicss2.css" rel="stylesheet" type="text/css">
+        <script src="bmi.js" type="text/javascript"></script>
+        
+            
+    </head>  
+    <body>
+        <div id="principal">
+            
+            <header><img src="fraises.jpg" alt="Body Mass Index"/>
+                <div class="titre">
+                    <h1 class="premier"> Calculateur d'IMC </h1>
+                </div>
+            </header>
+            <nav>
+                <ul class="nav">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li>Calculer votre indice</li>
+                </ul>    
+            </nav>
+            
+            <!--<div class="content">-->
+               
+                <table class="bmi">
+                    <tr class="titre"> 
+                        <td  colspan="2">
+                            Calculez votre IMC
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Poids:</td>
+                        <td>
+                            <input  type="number" min="15" max="360" value="120" name="wg" id="wg">
+                            <select  onchange="unit()" name="opt1" id="units">
+                                <option value="pounds" selected="selected">Livre</option>
+                                <option value="kilograms">kilogramme</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Hauteur:</td>
+                        <td> 
+                            <select  onchange="conv(1)" name="opt2" id="foot">
+                                <option value="3">3′</option>
+                                <option value="4">4′</option>
+                                <option value="5" selected="selected">5′</option>
+                                <option value="6">6′</option>
+                                <option value="7">7′</option>
+                            </select> Feet
+                         
+                            <select  onchange="conv(2)" name="opt3" id="inch">
+                                <option value="0" >0''</option>
+                                <option value="1">1''</option>
+                                <option value="2">2''</option>
+                                <option value="3">3''</option>
+                                <option value="4">4''</option>
+                                <option value="5" selected="selected">5''</option>
+                                <option value="6">6''</option>
+                                <option value="7">7''</option>
+                                <option value="8">8''</option>
+                                <option value="9">9''</option>
+                                <option value="10">10''</option>
+                                <option value="11">11''</option>
+                            </select> Inches
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="label">Ou Hauteur </td>
+                        <td >
+                            <input  type="number" value="165" min="80" max="250" name="ht" id="cm" onchange="conv(3)"> cm
+                        </td 
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td>
+                            <input  type="button" value="Calculer" name="cc" onclick="calc()">
+                        </td>
+                    </tr>
+                    <tr class="resultat">
+                        <td class="label">
+                            <div align="right">Votre IMC calculé :</div>
+                        </td>
+                        <td>
+                            <input  type="text" readonly="readonly" name="bmi" id="bmi">
+                        </td>
+                    </tr>
+                    <tr class="resultat label">
+                        <td class="label">Classification :</td>
+                        <td> 
+                            <input  type="text" readonly="readonly" id="corpulence">
+                        </td>
+                    </tr>
+                    
+                </table>
+
+            <!--</div>-->
+            <hr />
+            <footer>
+                <div>
+                    <a rel="generator" title="Semantic Personal Publishing Platform" href="https://netbeans.org/">Designed by SNIR1 - Proudly powered by Touchard</a>
+                </div>
+            </footer>
+           
+        </div>
+    </body>
+</html>

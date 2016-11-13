@@ -1,0 +1,73 @@
+/*
+Corrigé du sujet d'évaluation HTML5 CCS3
+*/
+/* 
+    Created on : 4 oct. 2016, 10:20:43
+    Author     : SNIR1
+*/
+body {
+    background-color: #f8f8f8;
+    font: 300 15px/1.625 "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+    
+#principal {
+    margin: auto;
+    width: 1000px;
+    border:solid 1px #666666;
+    background-color: #f1f1f1;
+
+}
+
+p,table {
+    margin-bottom: 1.625em;
+    margin-left: 3em;
+}
+
+strong {
+    font-weight: bold;
+}
+
+table.imc {
+    border: 1px solid black;
+    padding-left: 30px;
+    width: 60%;
+    background-color: #f8f8f8;
+}
+
+table.imc td {
+    font-weight: normal;
+    text-align: left;
+    border-top: 1px solid #ddd;
+    padding-left: 30px;
+}
+
+
+header > div {
+    position: absolute;
+    top: 0%;
+    left: 10%;
+    z-index: 1;
+}
+
+header h1 {
+    color: white;
+    font-size: 22pt;
+    text-transform: uppercase;
+}
+
+header {
+    position: relative;
+}
+
+footer {
+   background-color: #000;
+   text-align: center;
+   height : 40px;
+}
+footer a:link {
+    color:white;
+}
+footer a:visited {
+    color:yellow;
+}
+

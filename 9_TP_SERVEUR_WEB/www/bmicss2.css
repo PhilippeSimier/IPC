@@ -1,0 +1,57 @@
+
+/* 
+    Created on : 5 oct. 2015, 10:23:51
+    Author     : Philippe SIMIER
+*/
+
+table.bmi{
+    margin: auto;
+    margin-bottom: 40px;
+    margin-top: 40px;
+    border: solid black 1px;
+}
+
+table.bmi select,input{
+   font-size: 20px; 
+}
+
+table.bmi tr {
+    font-size: 20px;
+}
+
+table.bmi td {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+table.bmi td.label
+{
+    text-align: right;
+}
+
+table.bmi tr.titre {
+    background-color: black;
+    color: white;
+    font-size: 40px;
+    text-align: center;   
+}
+
+table.bmi tr.resultat {
+    background-color: black;
+    color: white;
+    
+}
+
+
+
+nav li{          /* les li du bloc nav */
+    display : inline;
+    padding : 0 0.5em; /* Pour espacer les boutons entre eux */
+    border-right : 1px solid black; /* pour tracer un trai vertical */
+    font-size: 18px;
+}
+
+
+
+
+
