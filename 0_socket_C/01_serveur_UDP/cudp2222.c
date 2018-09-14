@@ -23,7 +23,7 @@
 #include <errno.h>
 #include <string.h>
 #include <arpa/inet.h>
-
+#include <unistd.h>
 
 int main(int argc, char *argv[])
 {
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     if (argc != 2)
     {
 	printf("Usage ./cudp2222 127.0.0.1\n");
-	exit(0);
+	return 1;
     }
 
     fdSocket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     if (fdSocket == -1)
     {
 	printf("pb socket : %s\n", strerror(errno));
-	exit(0);
+	return 2;
     }
 
     adresseServeur.sin_family = AF_INET;
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	if (retour == -1)
 	{
 		printf("pb sendto : %s\n", strerror(errno));
-		exit(0);
+		return 3;
 	}
 
         // Attente de la réponse pendant deux secondes.
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 		if (retour == -1)
 		{
 			printf("pb recvfrom : %s\n", strerror(errno));
-			exit(0);
+			return 4;
 		}
 
 		printf("le serveur a retourne : %d\n\n",valeurRet);
