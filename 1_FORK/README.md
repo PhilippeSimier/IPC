@@ -54,7 +54,7 @@ Si un processus fils est déjà dans l'état zombie (c'est à dire qui a termin�
 int main ()
 {
 	int pid0, pid1;
-	int status;
+	int status, pid_fin;
 	
 	pid1 = fork();
 	if ( pid1 == 0 )
@@ -67,15 +67,18 @@ int main ()
 	{       // Père
 	    printf ( "je suis le père, mon pid est %d \n", getpid());
 		printf ( "pid de mon fils, %d\n", pid1);
-		fils_mort = wait(&status);
-		printf ( "Le code de retour de mon fils est %d\n", %d);
+		pid_fin = wait(&status);
+		printf ( "Le code de retour de mon fils est %d\n", status);
 	}
 }	
 ```
-Nota : seul le père peut attendre la fin d'exécution d'un de ses fils, l'inverse n'est pas possible, autrement dit, un fils ne peut pas attendre la fin d'exécution de son père.
+**Nota** : seul le père peut attendre la fin d'exécution d'un de ses fils, l'inverse n'est pas possible, autrement dit, un fils ne peut pas attendre la fin d'exécution de son père.
 Commande linux:
+
 **ps** Lancer cette commande sans argument montrera uniquement les processus dont vous êtes l'initiateur et qui sont rattachés au Terminal que vous utilisez.
+
 **pstree** La commande pstree affiche les processus sous forme d'arborescence et permet de les visualiser par leurs liens de parenté. 
+
 
 ```bash
 pi@raspberrypi3:~ $ pstree -up 510
