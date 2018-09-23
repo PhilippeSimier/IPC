@@ -14,7 +14,7 @@ int main ()
 		printf ( "je suis le fils, mon pid est %d \n", getpid());
 		printf ( "pid de mon père, %d\n", getppid());
 		sleep(2);
-		exit(1);
+		exit(2);
 	}
 	else
 	{       // Père
