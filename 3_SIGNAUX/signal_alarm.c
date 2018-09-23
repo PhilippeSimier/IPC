@@ -16,16 +16,17 @@
 
 pid_t pid;  // variable globale
 
-void onalarm()
+void onAlarm()
 {
-    printf("Handler onalarm\n");
+    printf("Attente terminée \n");
+    printf("Envoie de SIGKILL au processus %d\n", pid);
     kill (pid, SIGKILL);
-    exit (1);
 }
 
 int main()
 {
     int status;
+    pid_t pid_fin;
 
     pid = fork();
     if (pid == -1) {
@@ -33,21 +34,22 @@ int main()
     }
     else
     {
-	if (pid == 0) 
+	if (pid == 0)
         { // Processus fils
-	    printf("Je suis le fils !\n");
+	    printf(" - Je suis le processus fils pid : %d\n", getpid());
 	    for (;;)
 		{
-		printf(" Je boucle !\n");
+		printf(" - Je boucle !\n");
 		sleep(1);
 		}
 	}
         else
 	{
-	    printf(" Je suis le père\n");
-	    (void) signal (SIGALRM, onalarm); //le handler onalarm est attaché au signal alarm
+	    printf("Je suis le processus père pid : %d\n", getpid());
+	    (void) signal (SIGALRM, onAlarm); //le handler onAlarm est attaché au signal alarm
 	    alarm(10);  // alarm dans 10 secondes
-	    wait (&status);
+	    pid_fin = wait (&status); // attente de la fin du fils
+            printf("Fin du processus %d avec le status : %d\n", pid_fin, status);
 	}
     }
     return 0;
