@@ -1,6 +1,6 @@
 ﻿# Gestion des signaux
 
-##Définition
+## Définition
 
 Un **signal** est un **message envoyé par le noyau à un processus** pour indiquer l’occurrence d'un événement survenu au niveau du système.
 Ce message ne comporte pas d'informations propres si ce n'est le nom du signal lui-même.
@@ -42,7 +42,7 @@ Ce message ne comporte pas d'informations propres si ce n'est le nom du signal l
 
 La prise en compte du signal par le processus oblige celui-ci a exécuter une fonction de  gestion du signal appelée *handler  de signal*
 
-###Envoi d'un signal
+### Envoi d'un signal
 Un processus peut recevoir un signal de **deux façons différentes**:
 
  - Un signal lui est envoyé par **un autre processus** par l'intermédiaire de la primitive kill().  Exemple le shell envoie le signal SIGKILL si la commande **kill -9 pid** est saisie; autre exemple par programme envoie du signal SIGUSR1 au processus ayant pour pid : la valeur de la variable pid1:
