@@ -1,13 +1,48 @@
 ﻿# Gestion des signaux
 
-## Définition
+##Définition
 
 Un **signal** est un **message envoyé par le noyau à un processus** pour indiquer l’occurrence d'un événement survenu au niveau du système.
 Ce message ne comporte pas d'informations propres si ce n'est le nom du signal lui-même.
+### Signaux classiques
+
+| N° |   Nom  | Description |
+|----|--------|------------------|
+| 1  | SIGHUP | Terminaison du processus | 
+| 2	 | SIGINT | Interruption du clavier (ctrl C)|
+| 3	 | SIGQUIT|	Caractère (QUIT) frapper au clavier (ctrl \)|
+| 4  | SIGILL |	Instruction illégale |
+| 5  | SIGTRAP|	Point d'arrêt pour de débogage |
+| 6	 | SIGABRT| Terminaison anormale |
+| 7	 | SIGBUS | Erreur de Bus|
+| 8  | SIGFPE |	Floating-point exception - Exception arithmétique
+| 9	 | SIGKILL|	terminaison forcée du processus
+|10 | SIGUSR1 |	Signal utilisateur 1
+|11 | SIGSEGV |	Violation de mémoire
+|12	| SIGUSR2 |	Signal utilisateur 2
+|13 | SIGPIPE |	Ecriture dans un tube sans lecteur
+|14	| SIGALRM |	Fin de temporisation
+|15	| SIGTERM |	Terminaison de processus
+|16	| SIGSTKFLT | Erreur de pile du coprocesseur
+|17	| SIGCHLD |	Processus fils terminé
+|18	| SIGCONT |	Reprise du processus stoppé
+|19	| SIGSTOP |	Stop l'exécution du processus
+|20	| SIGTSTP |	Demande de suspension depuis le clavier (ctrl Z)
+|21	| SIGTTIN |	Lecture par un processus en arrière-plan
+|22	| SIGTTOU |	Ecriture par un processus en arrière-plan
+|23 | SIGURG  |	Données urgentes sur socket
+|24	| SIGXCPU |	Limite de temps CPU dépassé
+|25	| SIGXFSZ | Taille maximale de fichier atteinte
+|26	| SIGVTALRM | Alarme virtuelle
+|27	| SIGPROF |	Profiling alarm clock
+|28	| SIGWINCH | Changement de taille de fenêtre
+|29	| SIGIO | Arrivé de caractères à lire
+|30	|SIGPWR	| Chute d'alimentation
+|31	|SIGUNUSED | Non utilisé
 
 La prise en compte du signal par le processus oblige celui-ci a exécuter une fonction de  gestion du signal appelée *handler  de signal*
 
-### Envoi d'un signal
+###Envoi d'un signal
 Un processus peut recevoir un signal de **deux façons différentes**:
 
  - Un signal lui est envoyé par **un autre processus** par l'intermédiaire de la primitive kill().  Exemple le shell envoie le signal SIGKILL si la commande **kill -9 pid** est saisie; autre exemple par programme envoie du signal SIGUSR1 au processus ayant pour pid : la valeur de la variable pid1:
