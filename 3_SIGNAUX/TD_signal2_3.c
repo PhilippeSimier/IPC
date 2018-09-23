@@ -38,7 +38,7 @@ int main ( int argc, char *argv[] )
 		if (pid3 == 0){
 			// Enfant P3
 			printf ( "Enfant p3 pid = %d ppid = %d\n", getpid(), getppid());
-			sleep(1);
+
 			printf ("P3 envoie un signal USR1 à P1\n");
 			retour = kill(pid1, SIGUSR1);
 			if (retour !=0) {
@@ -51,25 +51,30 @@ int main ( int argc, char *argv[] )
 		else{
 			// Enfant P2
 			printf ( "Enfant p2 pid = %d ppid = %d\n", getpid(), getppid());
-                        sleep(1);
+                        printf("Le processus P2 attend un signal SIGUSR1\n");
+                        pause();
+
 			printf ("P2 envoie un signal USR1 à P1\n");
 			retour = kill(pid1, SIGUSR1); // envoi d'un signal USR1 au père P1
-			printf ("P1 envoie un signal USR1 à P3\n");
+                        if (retour !=0) {
+                                printf("Erreur avec kill");
+                        }
+
+			printf ("P2 envoie un signal USR1 à P3\n");
                         retour = kill(pid3, SIGUSR1); // envoi d'un signal USR1 a enfant P3
 			if (retour !=0) {
                                 printf("Erreur avec kill");
                         }
-			printf("Le processus P2 attend un signal\n");
-			pause();
 			printf ("Fin de processus P2\n");
                 }
 	}
 	else
 	{	// Père P1
-		sleep(3);
+                printf("Le processus P1 attend un premier signal SIGUSR1\n");
+		pause();
                 printf ("P1 envoie un signal USR1 à P2\n");
 		retour = kill(pid2, SIGUSR1); // envoi d'un signal USR1 a enfant 2
-                printf("Le processus P1 attend un signal\n");
+                printf("Le processus P1 attend un deuxième signal SIGUSR1\n");
 		pause();
 		printf ("Fin de processus P1\n");
 	}
