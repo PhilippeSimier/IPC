@@ -64,8 +64,9 @@ pthread_mutex_destroy (&verrou);
 
 ## Changelog
 
- **04/08/2018 :** Ajout du README . 
- **10/09/2018 :** Ajout du  script shell RaspbianOSsetup.sh
+ **28/09/2018 :** Ajout du README 
+ 
+ **10/09/2018 :** Ajout du TD fichier pdf
  
 > **Notes :**
 
