@@ -40,10 +40,27 @@ Les attributs d'un thread sont les suivants:
  - la priorité qui lui est associée
 	 - son attachement ou son détachement. Un thread détaché se termine immédiatement sans pouvoir être pris en compte par un pthread_join.
 
-pthread_t T;
-res = pthread_create(&T, NULL, tache1, (void *)&a);  
+## Mutex
+Un mutex est une variable de type pthread_mutxt_t servant de verrou pour protéger l'accès à des zones de codes ou de données particulières. Ce verrou peut prendre deux états disponible ou verrouillé, et il ne peut être acquis que par un seul thread à la fois. Un thread demandant a verrouiller un mutex déjà acquis par un autre thread est mis en attente.
+### Initialisation d'un mutex
+```c
+pthread_mutex_t verrou = PTHREAD_MUTEX_INITIALIZER; 
+```
+### Verrouillage d'un mutex
+Le verrouillage s'effectue en appelant la fonction 
+```c
+pthread_mutex_lock(&verrou); 
+```
+###  Déverrouillage d'un mutex
+La libération d'un mutex s'effectue en appelant la fonction
+```c
+pthread_mutex_unlock (&verrou);
+```
 
-
+### Destruction d'un mutex
+```c
+pthread_mutex_destroy (&verrou);
+```
 
 ## Changelog
 
