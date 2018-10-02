@@ -1,66 +1,103 @@
-﻿# Les Threads
+﻿# Files de message & mémoire partagée
 
-### notion de processus léger
+### Introduction
+ Les IPC *(inter processus communication)* Forme un groupe de trois outils de communication indépendant du système de gestion de fichiers. Ces outils sont :
+ 
 
-Le processus léger (thread) constitue une extension du modèle traditionnel de processus. L’extension consiste à admettre plusieurs fils d'exécutions indépendants dans un même espace d'adressage. Chacun de ces fils d'exécution est appelé **thread** et l'entité contenant les différents fils d'exécution est appelé processus.
+ - Les fils de messages ou MSQ (*Messages Queues*)
+ - Les mémoires partagées
+ - Les Sémaphores
+ 
+Un outil IPC est identifié de manière unique par un identifiant externe appelé la **clef**.
+La commande **ipcs** permet de lister l'ensemble des outils IPC existant à un moment donné sur un système.
+```bash
+psimier@b106tu4p4 ~ $ ipcs
 
-L'avantage lié à la notion de processus léger est un allègement des opérations de commutations de contexte, puisqu'elle consiste seulement à changer de pile et de valeur de compteur ordinal, le contexte mémoire reste le même. de même l'opération de création d'un nouveau thread est allégée puisqu'elle ne nécessite pas la duplication complète de l'espace mémoire du processus père.
+------ Files de messages --------
+clef       msqid      propriétaire perms      octets utilisés messages    
 
-### Implémentation au niveau noyau
+------ Segment de mémoire partagée --------
+clef       shmid      propriétaire perms      octets     nattch     états      
+0x00000000 196608     psimier    600        524288     2          dest         
+0x00000000 360449     psimier    600        524288     2          dest          
+0x00000000 3899416    psimier    600        28672      2          dest         
 
-Lorsque l'implémentation des threads est effectuées au niveau du noyau, alors celui-ci connaît leur existence et il attribue le processeur à chacun des threads de manière indépendante. Chaque descripteur de processus contient alors également la table des threads qui le composent avec pour chacun d'eux la sauvegarde de son contexte processeur.  
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
 
-## Fonctions de gestion des threads
+psimier@b106tu4p4 ~ $ 
 
-Elles sont définies dans la librairie **pthread**,  il faut donc inclure
-```c
-#include <pthread.h>
-```
-Il faut aussi ajouter l'option **-lpthread** lors de l'appel à l'éditeur de liens.
-Chaque thread est identifié de manière unique par un type **pthread_t**. ce type joue un rôle analogue au type pid_t des processus.
-
-### Création d'un thread
-La primitive **pthread_create** permet la création  au sein d'un processus, d'un nouveau thread identifié par T. Le fil d'exécution démarre son exécution au début de la fonction spécifiée tache1 et disparait à la fin de l'exécution de celle-ci. 
-
-```c
-pthread_t T;
-res = pthread_create(&T, NULL, tache1, (void *)&a);  
-```
-Le deuxième argument correspond aux attributs associés au thread. Cette argument est le plus souvent mis à NULL pour hériter des attributs standards. 
-le troisième argument correspond à la fonction associée au thread.
-le quatrième argument correspond est un argument passé à la fonction tache1.
-
-### Terminaison d'un thread
-La primitive **pthread_exit(void *ret)**  met fin au thread qui l'exécute. Elle retourne le paramètre ret qui peut être récupéré par un autre thread effectuant pour sa part un appel **pthread_join(T, &thread_result)**  ou T correspond à l'identifiant du thread attendu, et thread_result correspond à la valeur ret retournée lors de la terminaison.
-
-### Attributs d'un thread
-Les attributs d'un thread sont les suivants:
- - l'adresse de départ et la taille de la pile associée
- - la politique d'ordonnancement qui lui est associée
- - la priorité qui lui est associée
-	 - son attachement ou son détachement. Un thread détaché se termine immédiatement sans pouvoir être pris en compte par un pthread_join.
-
-## Mutex
-Un mutex est une variable de type pthread_mutxt_t servant de verrou pour protéger l'accès à des zones de codes ou de données particulières. Ce verrou peut prendre deux états disponible ou verrouillé, et il ne peut être acquis que par un seul thread à la fois. Un thread demandant a verrouiller un mutex déjà acquis par un autre thread est mis en attente.
-### Initialisation d'un mutex
-```c
-pthread_mutex_t verrou = PTHREAD_MUTEX_INITIALIZER; 
-```
-### Verrouillage d'un mutex
-Le verrouillage s'effectue en appelant la fonction 
-```c
-pthread_mutex_lock(&verrou); 
-```
-###  Déverrouillage d'un mutex
-La libération d'un mutex s'effectue en appelant la fonction
-```c
-pthread_mutex_unlock (&verrou);
 ```
 
-### Destruction d'un mutex
+## Les files de message
+
+Le noyau Linux gère au maximum 128 files de messages pouvant contenir 4056 octets.
+
+###  Accès à une file de messages
+L'accès à un file de message s'effectue par l'intermédiaire de la primitive msget(). Cette primitive permet :
+
+ - La création d'une nouvelle file de message;
+ - l'accès à une file de message déjà existante;
+ 
 ```c
-pthread_mutex_destroy (&verrou);
+ /* Accès à la file pour la clé key */
+ idFile = msgget( key , 0666|IPC_CREAT );
+	if (idFile==-1){
+		printf("pb creation file : %s\n",strerror(errno));
+		exit(1);
+	}
 ```
+Le premier paramètre correspond à la clef, c'est l'identifiant externe de la file de messages. Le deuxième paramètre est une combinaison des constantes IPC_CREAT, IPC_EXCL et de droits d'accès définis comme dans le cadre des fichiers. En cas de succès la fonction renvoie l'identifiant interne de la file de message, cette identifiant joue le même rôle qu'un descripteur de fichier. 
+
+La création d'un file de message est demandée en positionnant les constantes IPC_CREAT et IPC_EXCL. Une nouvelle file est alors créée avec les droits d'accès définis dans le paramètre option. 
+si **IPC_CREAT et IPC_EXCL** sont utilisé conjointement et qu'une file existe déjà avec l'identifiant externe cle alors une erreur une erreur est générée.
+si IPC_CREAT est positionné seul alors qu'un file d''identifiant externe cle existe déjà alors l'accès à cette file est retournée.
+si **IPC_PRIVAT** est utilisé alors une file de massage est créée et seulement accessible par ce processus et ses descendants.
+
+### Format des messages
+Un message est toujours composée de deux parties :
+
+ - La première partie constitue le type du message, c'est un entier long
+ - la seconde partie est composée des données proprement dites.
+```c
+struct message{
+	long type;
+	char donnee[9];
+};
+```
+### Envoi d'un message
+
+L'envoi d'un message s'effectue par l'intermédiaire de la primitive **msgsnd()**. Par défaut msgsnd() est bloquant c'est à dire que le processus est suspendu lors d'un dépôt d'un message si la file est pleine. En positionnant le paramètre IPC_NOWAIT la primitive de dépôt devient non bloquante.
+```c
+msgsnd(idFile,(void*)&maFile,sizeof(maFile.texte),IPC_NOWAIT); 
+```
+### Réception d'un message
+
+Un processus désirant prélever un message depuis une file de messages utilise la primitive **msgrcv()**
+```c
+ret=msgrcv(idFile,(void*)&maFile,9,2,IPC_NOWAIT);
+```
+
+ - idFile :  correspond à l'identifiant interne de la file
+ - (void*)&maFile : adresse de la zone mémoire pour recevoir le message
+ - 9 : longueur des données dans le message
+ - 2 : permet de désigner le type à extraire. Le message le plus ancien dont le type est égal à 2 est extrait en premier. 
+ - IPC_NOWAIT : la primitive devient non bloquante.
+ - ret : la fonction renvoie la longueur du message prélevé en cas de success, -1 sinon.
+ 
+ Par défaut la primitive  **msgrcv()** est bloquante, c'est à dire que le processus est suspendu lors du retrait d'un message si la file ne contient pas de message au type attendu.
+
+### Destruction d'une file de message
+La destruction d'une file de message s'effectue en utilisant la primitive **msgctl()** 
+```c
+msgctl( idFile, IPC_RMID, NULL);
+```
+
+
+
+
+
+
 
 ## Changelog
 
