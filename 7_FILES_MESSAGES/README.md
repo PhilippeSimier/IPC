@@ -1,4 +1,4 @@
-﻿# Files de message
+﻿# Files de messages
 
 ### Introduction
  Les IPC *(inter processus communication)* Forme un groupe de trois outils de communication indépendant du système de gestion de fichiers. Ces outils sont :
