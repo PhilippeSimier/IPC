@@ -8,7 +8,8 @@
  - Les mémoires partagées
  - Les Sémaphores
  
-Un outil IPC est identifié de manière unique par un identifiant externe appelé la **clef**.
+Un outil IPC est identifié de manière unique par un **identifiant externe** appelé la **clef**. Cette clé a la même fonction que le nom de fichier pour les fonctions open().
+
 La commande **ipcs** permet de lister l'ensemble des outils IPC existant à un moment donné sur un système.
 ```bash
 psimier@b106tu4p4 ~ $ ipcs
@@ -57,7 +58,7 @@ si **IPC_PRIVAT** est utilisé alors une file de massage est créée et seulemen
 ### Format des messages
 Un message est toujours composée de deux parties :
 
- - La première partie constitue le type du message, c'est un entier long
+ - La première partie constitue le type du message, c'est un entier long. Le type peut être un numéro de processus. Un producteur qui connaît les pids des consommateurs peut utiliser ces pids comme "type". De son coté, un consommateur peut ne retirer que les messages ayant pour "type" son propre pid.  Ainsi, une seule file de messages peut permettre à un ou plusieurs producteurs de déposer des messages à destination de consommateurs désignés. Autre possibilité, le "type" peut être considéré comme une priorité de message. Par exemple, le producteur peut envoyer des messages dont le type est dans l'intervalle [1, 10] (priorité 1 la plus basse).
  - la seconde partie est composée des données proprement dites.
 ```c
 struct message{
@@ -65,6 +66,8 @@ struct message{
 	char donnee[9];
 };
 ```
+les données ne doit contenir aucun pointeur et aucune référence vers d'autres zones de la mémoire virtuelle du processus (zone statique, dynamique, automatique). En effet, transposée dans la mémoire virtuelle du processus consommateur, il est probable que ces adresses ne correspondent pas aux mêmes valeurs.
+
 ### Envoi d'un message
 
 L'envoi d'un message s'effectue par l'intermédiaire de la primitive **msgsnd()**. Par défaut msgsnd() est bloquant c'est à dire que le processus est suspendu lors d'un dépôt d'un message si la file est pleine. En positionnant le paramètre IPC_NOWAIT la primitive de dépôt devient non bloquante.
