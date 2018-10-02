@@ -1,4 +1,4 @@
-﻿# Files de message & mémoire partagée
+﻿# Files de message
 
 ### Introduction
  Les IPC *(inter processus communication)* Forme un groupe de trois outils de communication indépendant du système de gestion de fichiers. Ces outils sont :
@@ -101,8 +101,8 @@ msgctl( idFile, IPC_RMID, NULL);
 
 ## Changelog
 
- **04/08/2018 :** Ajout du README . 
- **10/09/2018 :** Ajout du  script shell RaspbianOSsetup.sh
+ **02/10/2018 :** Ajout du README . 
+
  
 > **Notes :**
 
