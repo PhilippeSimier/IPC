@@ -1,4 +1,4 @@
-﻿# Files de message & mémoire partagée
+﻿# Files de messages
 
 ### Introduction
  Les IPC *(inter processus communication)* Forme un groupe de trois outils de communication indépendant du système de gestion de fichiers. Ces outils sont :
@@ -69,18 +69,18 @@ struct message{
 
 L'envoi d'un message s'effectue par l'intermédiaire de la primitive **msgsnd()**. Par défaut msgsnd() est bloquant c'est à dire que le processus est suspendu lors d'un dépôt d'un message si la file est pleine. En positionnant le paramètre IPC_NOWAIT la primitive de dépôt devient non bloquante.
 ```c
-msgsnd(idFile,(void*)&maFile,sizeof(maFile.texte),IPC_NOWAIT); 
+msgsnd(idFile,(void*)&maFile,sizeof(maFile.donnee),IPC_NOWAIT); 
 ```
 ### Réception d'un message
 
 Un processus désirant prélever un message depuis une file de messages utilise la primitive **msgrcv()**
 ```c
-ret=msgrcv(idFile,(void*)&maFile,9,2,IPC_NOWAIT);
+ret=msgrcv(idFile,(void*)&maFile,sizeof(maFile.donnee),2,IPC_NOWAIT);
 ```
 
  - idFile :  correspond à l'identifiant interne de la file
  - (void*)&maFile : adresse de la zone mémoire pour recevoir le message
- - 9 : longueur des données dans le message
+ - sizeof(maFile.donnee) : longueur des données dans le message
  - 2 : permet de désigner le type à extraire. Le message le plus ancien dont le type est égal à 2 est extrait en premier. 
  - IPC_NOWAIT : la primitive devient non bloquante.
  - ret : la fonction renvoie la longueur du message prélevé en cas de success, -1 sinon.
@@ -101,8 +101,8 @@ msgctl( idFile, IPC_RMID, NULL);
 
 ## Changelog
 
- **04/08/2018 :** Ajout du README . 
- **10/09/2018 :** Ajout du  script shell RaspbianOSsetup.sh
+ **02/10/2018 :** Ajout du README . 
+
  
 > **Notes :**
 
