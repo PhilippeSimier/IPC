@@ -30,9 +30,9 @@ psimier@b106tu4p4 ~ $
 ```
 
 ## Les régions de mémoire partagée
-Par défaut, l'espace mémoire de chaque processus est privé, c'est à dire que cet espace ne peut pas être accéder par un autre processus. Les régions de mémoire partagées (*shared memory*) constituent une extension de l'espace d'adressage d'un processus qui peut être partagé par un autre processus.
+Par défaut, l'espace mémoire de chaque processus est privé, c'est à dire que cet espace ne peut pas être accédé par un autre processus. Les régions de mémoire partagées (*shared memory*) constituent une extension de l'espace d'adressage d'un processus qui peut être partagé par un autre processus.
 
-Ce partage d'une zone mémoire par plusieurs processus implique de synchroniser les accès aux données afin que le cohérence soit respectée. Cette sécurisation sera réalisée à l'aide des sémaphores.
+Ce partage d'une zone mémoire par plusieurs processus implique de synchroniser les accès aux données afin que la cohérence soit respectée. Cette sécurisation sera réalisée à l'aide des sémaphores.
 
 ### Création d'une région de mémoire partagée
 
