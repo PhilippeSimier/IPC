@@ -6,7 +6,7 @@ Le processus léger (thread) constitue une extension du modèle traditionnel de 
 
 L'avantage lié à la notion de processus léger est un allègement des opérations de commutations de contexte, puisqu'elle consiste seulement à changer de pile et de valeur de compteur ordinal, le contexte mémoire reste le même. de même l'opération de création d'un nouveau thread est allégée puisqu'elle ne nécessite pas la duplication complète de l'espace mémoire du processus père.
 
-![illustration memoire](/)threadvisual-example.png
+![illustration memoire](/threadvisual-example.png)
 
 ### Implémentation au niveau noyau
 
