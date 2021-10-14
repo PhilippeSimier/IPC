@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <string.h>
 
 
 // handler affichage
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     pid1 = getpid();
     // redirection des signaux SIGUSR1 vers la fonction affichage
-    (void) signal(SIGUSR1, affichage);
+    signal(SIGUSR1, affichage);
 
     printf("Père   p1 pid = %d\n", pid1);
     status = pipe(pipefd); // Creation du tube
