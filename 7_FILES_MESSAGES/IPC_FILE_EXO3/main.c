@@ -31,16 +31,16 @@ int main() {
 
     // boucle infinie
     while (1) {
-        // reception des messages de type 2 à 4
+        // reception des messages
+        // type = 0: le message qui se trouve en tête de file est reçu
 
-        for (long i = 2; i < 5; i++) {
 
-            ret = msgrcv(idFile, (void*) &maFile, sizeof (maFile.texte), i, IPC_NOWAIT);
-            if (ret != -1) {
-                printf("%s type : %ld\n", maFile.texte, maFile.type);
-            }
-
+        ret = msgrcv(idFile, (void*) &maFile, sizeof (maFile.texte), 0, IPC_NOWAIT);
+        if (ret > 1) {
+            printf("%s type : %ld\n", maFile.texte, maFile.type);
         }
+
+
     }
 
     exit(EXIT_SUCCESS);
