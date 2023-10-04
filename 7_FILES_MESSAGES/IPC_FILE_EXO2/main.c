@@ -1,6 +1,6 @@
 /*****************************************
- *	p1.c
- *	met des messages de type 2(temp) et 4(press)
+ *	p2.c
+ *	met des messages de type 3(ordre)
  *	dans la file de messages ayant pour clef
  *	5678
  * *****************************************/
@@ -32,27 +32,18 @@ int main() {
         exit(1);
     }
 
-    // boucle infinie pour envoyer des temperatures et des pressions
+    // boucle infinie pour envoyer des ordres (lettre comprise entre a et c)
     while (1) {
 
 
-        maFile.type = 2;
-        snprintf(maFile.texte, sizeof(maFile.texte), "Temperature : %.2f", randomF());
+        maFile.type = 3;
+        snprintf(maFile.texte, sizeof(maFile.texte), "Ordre : %c", randomC());
         ret = msgsnd(idFile, (void*) &maFile, sizeof(maFile.texte), IPC_NOWAIT);
         if (ret == -1){
             printf("pb msgsnd : %s\n", strerror(errno));
         }
-        
         sleep(1);
 
-  
-        maFile.type = 4;
-        snprintf(maFile.texte, sizeof(maFile.texte), "Pression : %d", randomI());
-        ret = msgsnd(idFile, (void*) &maFile, sizeof(maFile.texte), IPC_NOWAIT);
-        if (ret == -1){
-            printf("pb msgsnd : %s\n", strerror(errno));
-        }
-        sleep(2);
     }
 
     exit(EXIT_SUCCESS);
