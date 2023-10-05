@@ -1,8 +1,6 @@
 /*
- * Serveur UDP port 2222
- */
-
-/* 
+ * Serveur UDP port 4444
+ * 
  * File:   main.c
  * Author: psimier
  *
@@ -19,17 +17,26 @@
 #include <string.h>
 #include <arpa/inet.h>
 
+typedef struct{
+	unsigned char jour;
+	unsigned char mois;
+	unsigned short int annee;
+	char jourDeLaSemaine[10];	// le jour en toute lettre
+}datePerso;
+
 int main(int argc, char** argv) {
 
     int fdSocket;
+
     struct sockaddr_in adresseServeur;
     struct sockaddr_in adresseClient;
 
     int retour;
+    char buffer[255];
     int tailleclient;
-    int valRec;
+    datePerso valRec;
 
-    printf("serveur UDP sur port 2222 attend un ENTIER\n");
+    printf("serveur UDP sur port 4444 attend une structure Date\n");
     tailleclient = sizeof (adresseClient);
 
     // Création de la socket
@@ -37,20 +44,20 @@ int main(int argc, char** argv) {
 
     if (fdSocket == -1) {
         printf("pb socket : %s\n", strerror(errno));
-        exit(errno);
+        exit(1);
     }
 
     // Bind
     adresseServeur.sin_family = AF_INET;
-    adresseServeur.sin_port = htons(2222);
+    adresseServeur.sin_port = htons(4444);
     adresseServeur.sin_addr.s_addr = htons(INADDR_ANY); // ecoute toutes les adresses
 
     retour = bind(fdSocket,
-            (struct sockaddr*) &adresseServeur,
-            sizeof (adresseServeur));
+             (struct sockaddr*) &adresseServeur,
+             sizeof (adresseServeur));
     if (retour == -1) {
         printf("pb bind : %s\n", strerror(errno));
-        exit(errno);
+        exit(2);
     }
 
     // ecoute du client avec recvfrom
@@ -65,18 +72,20 @@ int main(int argc, char** argv) {
 
         if (retour == -1) {
             printf("pb recvfrom : %s\n", strerror(errno));
-            exit(errno);
+            exit(3);
         }
 
         // affichage de la reception des valeurs entières
-        printf("Message recu du client %s:%d -> %d\n",
+        printf("Message recu du client %s:%d ->%s %u %u %u\n",
                 inet_ntoa(adresseClient.sin_addr),
                 adresseClient.sin_port,
-                valRec);
+                valRec.jourDeLaSemaine,
+                valRec.jour,
+                valRec.mois,
+                valRec.annee);
 
-        // calcule de la réponse
-        valRec *= -1;
-        printf("valeur envoyee : %d\n",valRec); 
+        
+
         // envoyer la réponse au client
         retour = sendto(fdSocket,
                 &valRec,
@@ -87,10 +96,9 @@ int main(int argc, char** argv) {
 
         if (retour == -1) {
             printf("pb sendto : %s\n", strerror(errno));
-            exit(errno);
+            exit(4);
         }
     }
-    close(fdSocket);
 
     return (EXIT_SUCCESS);
 }

@@ -1,6 +1,6 @@
 /*
- * Client udp 	2222	  					   *
- * Envoie un entier au serveur udp et affiche la valeur retournée 
+ * Client udp 		  					   *
+ * Envoie un flottant au serveur udp 3333 et affiche la valeur retournée 
  */
 
 /* 
@@ -23,7 +23,7 @@
 int main(int argc, char *argv[]) {
 
     int fdSocket;
-    int valeurEnv, valeurRet = 0;
+    float valeurEnv, valeurRet = 0;
     struct sockaddr_in adresseServeur;
     struct sockaddr_in adresseServeurReponse;
     int retour, tailleReponse;
@@ -37,12 +37,12 @@ int main(int argc, char *argv[]) {
 
     adresseServeur.sin_family = AF_INET;
 
-    adresseServeur.sin_port = htons(2222); //numero de port du serveur dans l'ordre des octets du réseau
+    adresseServeur.sin_port = htons(3333); //numero de port du serveur dans l'ordre des octets du réseau
     adresseServeur.sin_addr.s_addr = inet_addr(argv[1]); // adresse IP du serveur dans l'ordre des octets du reseau
     
     while (1) {
         printf("valeur a envoyer au serveur UDP : ");
-        scanf("%d", &valeurEnv);
+        scanf("%f", &valeurEnv);
         retour = sendto(fdSocket, 
                 &valeurEnv, 
                 sizeof (valeurEnv), 
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
         if (retour == -1) {
             printf("pb sendto : %s\n", strerror(errno));
-            exit(1);
+            exit(errno);
         }
         // reponse du serveur
         retour = recvfrom(fdSocket, 
@@ -64,10 +64,10 @@ int main(int argc, char *argv[]) {
 
         if (retour == -1) {
             printf("pb recvfrom : %s\n", strerror(errno));
-            exit(2);
+            exit(errno);
         }
 
-        printf("le serveur a retourne : %d\n", valeurRet);
+        printf("le serveur a retourne : %.2f\n", valeurRet);
     }
     return EXIT_SUCCESS;
 }
