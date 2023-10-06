@@ -3,6 +3,8 @@
  * Author: psimier
  *
  * Created on 5 octobre 2023, 17:26
+ * 
+ * Serveur TCP écoute le port 5555
  */
 
 #include <stdio.h>
@@ -11,6 +13,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 #include <errno.h>
 #include <string.h>
 
