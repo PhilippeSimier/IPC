@@ -87,15 +87,10 @@ int main(int argc, char *argv[]) {
 
         if (retour == -1) {
             printf("pb connect : %s\n", strerror(errno));
-            exit(0);
+            exit(errno);
         }
 
-
         close(fdSocketClient);
-
-        /*memset(buffer, '\0', 255);
-        read(fdSocket,buffer,255);
-        printf("reposne: %s\n",buffer);*/
     }
 
 

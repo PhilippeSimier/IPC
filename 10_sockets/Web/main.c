@@ -2,7 +2,7 @@
  * File:   main.c
  * Author: psimier
  *
- * Created on 14 octobre 2021, 10:59
+ * Created on 11 octobre 2023, 15:59
  */
 
 #include <stdio.h>
@@ -18,7 +18,7 @@
 #include <arpa/inet.h>
 
 // Prototype d'une fonction de service
-void service(int fdSocketClient, struct sockaddr_in adresseClient);
+void service(int fdSocketClient);
 // Prototype d'une fonction de service
 void envoyer404(int fdSocketClient, char* fichier);
 
@@ -68,16 +68,17 @@ int main(int argc, char** argv) {
                 (struct sockaddr *) &adresseClient,
                 &tailleClient);
         // appel de la fonction de service
-        service(fdSocketClient, adresseClient);
+        service(fdSocketClient);
 
     }
+    
     return (EXIT_SUCCESS);
 }
 
 /**
  * Fonction de service repond a la requête du client 
  */
-void service(int fdSocketClient, struct sockaddr_in adresseClient) {
+void service(int fdSocketClient) {
 
     char requete[512];
     int retour;
@@ -100,41 +101,43 @@ void service(int fdSocketClient, struct sockaddr_in adresseClient) {
     mot[2] = strtok(NULL, " \t\n");
 
 
-    printf("requete du client %s\n", mot[0]);
-    printf("fichier  %s\n", mot[1]);
-    printf("protocole  %s\n", mot[2]);
+    // si requéte GET lecture du fichier demandé 
+    if (strcmp(mot[0], "GET") == 0) {
+        printf("requete GET OK\n");
+        printf("fichier demandé  %s\n", mot[1]);
+        printf("protocole  %s\n\n", mot[2]);
 
-    //lecture du fichier demandé
+        FILE * frep = fopen(mot[1] + 1, "r");
+        if (frep == NULL) {
+            printf("pb avec fopen %s\n", strerror(errno));
+            printf(">> Erreur 404: Fichier non trouvé\n");
+            envoyer404(fdSocketClient, mot[1] + 1);
 
-    FILE * frep = fopen(mot[1] + 1, "r");
-    if (frep == NULL) {
-        printf("pb avec fopen %s\n", strerror(errno));
-        printf(">> Erreur 404: Fichier non trouvé\n");
-        envoyer404(fdSocketClient, mot[1] + 1);
+        } else {
+            memset(reponse, '\0', 2048);
+            retour = fread(reponse, 1, 2048, frep);
+            fclose(frep);
 
-    } else {
-        memset(reponse, '\0', 2048);
-        retour = fread(reponse, 1, 2048, frep);
-        fclose(frep);
+            sprintf(reponseComplete,
+                    "HTTP/1.1 200 OK\nContent-length: %d\nContent-Type: text/html\n\n",
+                    strlen(reponse));
+            strncat(reponseComplete, reponse, 4096);
+            printf("%s\n", reponseComplete);
 
-        sprintf(reponseComplete, "HTTP/1.1 200 OK\nContent-length: %d\n\n", strlen(reponse));
-        strncat(reponseComplete, reponse, 4096);
-        printf("%s\n", reponseComplete);
+            // ecriture de la réponse
 
-        // ecriture de la réponse
-
-        retour = write(fdSocketClient, reponseComplete, strlen(reponseComplete));
+            retour = write(fdSocketClient, reponseComplete, strlen(reponseComplete));
+        }
+        shutdown(fdSocketClient, SHUT_RDWR);
+        close(fdSocketClient);
     }
-    shutdown(fdSocketClient, SHUT_RDWR);
-    close(fdSocketClient);
-
 }
 
 void envoyer404(int fdSocketClient, char* fichier) {
     write(fdSocketClient, "HTTP/1.1 404 Not found\r\n", 24);
     write(fdSocketClient, "Connection: close\r\n", 19);
     write(fdSocketClient, "Content-type: text/html\r\n", 25);
-    write(fdSocketClient, "\r\n", 2);   // Fin de l'entête
+    write(fdSocketClient, "\r\n", 2); // Fin de l'entête
     write(fdSocketClient, "<html><head><title>Erreur 404 !</title><meta charset=\"UTF-8\"></head>", 67);
     write(fdSocketClient, "<body><p>Désolé, le fichier demandé n'a pas été trouvé : ", 63);
     char chaine[512];
